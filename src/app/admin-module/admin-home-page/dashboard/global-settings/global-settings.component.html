@@ -1,0 +1,77 @@
+<div fxLayout="column" fxLayoutGap="20px">
+  <!--<section>-->
+  <!--<app-custom-radio [(ngModel)]="templateDrivenValue"></app-custom-radio>-->
+  <!--<p>{{"ngModel value: " + templateDrivenValue}}</p>-->
+  <!--</section>-->
+
+  <!--<section>-->
+  <!--<form [formGroup]="form">-->
+  <!--<app-custom-radio formControlName="radio"></app-custom-radio>-->
+  <!--</form>-->
+  <!--<p>{{form.value | json}}</p>-->
+  <!--</section>-->
+
+  <section>
+    <form [formGroup]="formWithArray">
+      <div class="field">
+        <label class="label" for="fullName">Full name</label>
+        <div class="control">
+          <input id="fullName" class="input" type="text" placeholder="Enter full name here" formControlName="fullName">
+        </div>
+        <div
+          *ngIf="formWithArray.get('age').errors && (formWithArray.get('fullName').touched || formWithArray.get('fullName').dirty)">
+          <ng-container
+            *ngTemplateOutlet="error; context: {errorText: formWithArray.get('fullName').errors}"></ng-container>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="age">Age</label>
+        <div class="control">
+          <input id="age" class="input" type="number" placeholder="Enter age here" formControlName="age">
+        </div>
+        <div
+          *ngIf="formWithArray.get('age').errors && (formWithArray.get('age').touched || formWithArray.get('age').dirty)">
+          <ng-container *ngTemplateOutlet="error; context: {errorText: formWithArray.get('age').errors}"></ng-container>
+        </div>
+      </div>
+
+      <ng-container formArrayName="skills"
+                    *ngFor="let item of formWithArray.get('skills').controls; let i = index">
+        <div class="field">
+          <label class="label" for="age">Skill</label>
+          <div class="control">
+            <div class="columns">
+              <div class="column">
+                <input [id]="'skill-'+i" type="text" class="input" placeholder="Enter skill name here"
+                       [formControlName]="i">
+              </div>
+              <div class="column">
+                <button class="delete" aria-label="delete" (click)="removeSkillControl(i)"></button>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="item && item.errors && (item.touched || item.dirty)">
+            <ng-container *ngTemplateOutlet="error; context: {errorText: item.errors}"></ng-container>
+          </div>
+        </div>
+      </ng-container>
+      <a (click)="addSkillControl()">add new skill</a>
+      formWithArray value json representation: {{formWithArray.getRawValue() | json}}
+    </form>
+  </section>
+</div>
+
+<ng-template #error let-violation="errorText">
+  <ng-container *ngIf="violation && violation.hasOwnProperty('required')">
+    <p class="help is-danger">This field is required</p>
+  </ng-container>
+  <ng-container *ngIf="violation && violation.hasOwnProperty('minlength')">
+    <p class="help is-danger">This field violate min length of {{violation?.minlength?.requiredLength}}. Actual
+      lenth {{violation?.minlength?.actualLength}}.</p>
+  </ng-container>
+  <ng-container *ngIf="violation && violation.hasOwnProperty('maxlength')">
+    <p class="help is-danger">This field violate max length of {{violation?.maxlength?.requiredLength}}. Actual
+      lenth {{violation?.maxlength?.actualLength}}.</p>
+  </ng-container>
+</ng-template>

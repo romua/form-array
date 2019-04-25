@@ -1,0 +1,22 @@
+:host {
+  width: 100%;
+
+  .nav-wrap {
+    background-color: black;
+    height: 40px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding-left: 10px;
+
+    .nav-item {
+
+      &:not(:last-of-type) {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
